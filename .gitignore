@@ -1,0 +1,14 @@
+# Mac OS
+.DS_Store
+
+__pycache__/
+*.pyc
+
+data/*.csv
+
+model/*.nc
+model/*.pkl
+
+# PyMC / Math Caches
+.aesara/
+.pytensor/
