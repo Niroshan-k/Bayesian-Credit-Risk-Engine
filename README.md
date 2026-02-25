@@ -1,6 +1,6 @@
 # Bayesian Credit Risk Engine
 
-![Dashboard Screenshot](data/dashboard.png)
+
 
 ## Overview
 The Bayesian Credit Risk Engine is a probabilistic machine learning application designed to assess the default risk of SME loans. Instead of providing a single rigid prediction, this model uses Bayesian inference (MCMC sampling) to calculate a full probability distribution of an applicant's risk, allowing for smarter, dynamic interest rate pricing based on uncertainty.
