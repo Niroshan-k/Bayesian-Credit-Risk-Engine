@@ -1,42 +1,114 @@
 # Bayesian Credit Risk Engine
 
-![Dashboard Screenshot](data/dashboard.png)
+> A probabilistic ML tool for banks and financial institutions — predicts loan default probability with confidence, not just a number.
 
-## Overview
-The Bayesian Credit Risk Engine is a probabilistic machine learning application designed to assess the default risk of SME loans. Instead of providing a single rigid prediction, this model uses Bayesian inference (MCMC sampling) to calculate a full probability distribution of an applicant's risk, allowing for smarter, dynamic interest rate pricing based on uncertainty.
+![Dashboard](data/dashboard.png)
+
+---
+
+## Mathematical Concept Breakdown
+
+| | | |
+|:---:|:---:|:---:|
+| ![](images/1.png) | ![](images/2.png) | ![](images/3.png) |
+| ![](images/4.png) | ![](images/5.png) | ![](images/6.png) |
+| ![](images/7.png) | ![](images/8.png) | ![](images/9.png) |
+| ![](images/10.png) | ![](images/11.png) | ![](images/12.png) |
+| | | |
+
+---
+
+## What Is This?
+
+Most ML models give you a single prediction — 84% chance of default. That number has no uncertainty attached to it. The model is completely confident, whether it should be or not.
+
+In banking, that's a problem. Knowing **how confident** the model is matters just as much as the prediction itself.
+
+This engine uses **Bayesian inference** to produce a full probability distribution instead of a single number. For each loan applicant it returns:
+
+- A **mean default probability** — the best estimate
+- A **confidence range** — how certain the model is
+- A **dynamic interest rate** — priced according to the actual risk distribution
+
+If the model is uncertain about a borderline case, it flags it for human review rather than making a blind automated decision.
+
+---
+
+## Why Bayesian?
+
+Standard ML finds one set of weights and commits to them. Bayesian ML treats weights as distributions — reflecting the uncertainty about what the true values really are.
+
+Under the hood this means solving:
+
+```
+P(β | data) = P(data | β) × P(β) / P(data)
+```
+
+The denominator `P(data)` requires integrating over every possible combination of parameters — which becomes computationally impossible as the number of features grows. **MCMC (Markov Chain Monte Carlo)** solves this by sampling the posterior distribution without ever computing that integral directly.
+
+The result is a matrix of thousands of plausible weight combinations. For each new applicant, the model runs through every row, producing a distribution of predictions rather than a single output.
+
+---
 
 ## Key Features
-* **Probabilistic Predictions:** Calculates exact default probability percentages using PyMC.
-* **Dynamic Loan Pricing:** Automatically assigns interest rates (e.g., 8%, 14%, 22%) based on defined risk thresholds.
-* **Uncertainty Visualization:** Displays Bayesian posterior distributions to visualize the engine's confidence in its decision.
-* **Interactive UI:** A fully featured Streamlit dashboard for real-time applicant evaluation.
+
+- **Probabilistic predictions** — full posterior distribution per applicant, not a point estimate
+- **Uncertainty quantification** — std and 95% confidence interval on every prediction
+- **Dynamic interest rate pricing** — rates assigned based on risk distribution thresholds
+- **Explainability** — parameter distributions show which features drive default risk
+- **Interactive dashboard** — real-time Streamlit UI for live applicant evaluation
+
+---
+
+## Relevance to Banking Regulation
+
+- **IFRS 9** — requires Expected Credit Loss estimation with probability-weighted scenarios. This model naturally produces those distributions.
+- **Basel III IRB** — requires Probability of Default (PD), Loss Given Default (LGD), and Exposure at Default (EAD). Uncertainty quantification strengthens these estimates.
+
+---
 
 ## Tech Stack
-* **Core ML:** PyMC, ArviZ, Scikit-Learn, NumPy, Pandas
-* **Frontend UI:** Streamlit, Matplotlib
+
+| Layer | Tools |
+|---|---|
+| Core ML | PyMC, ArviZ, scikit-learn |
+| Data | NumPy, Pandas |
+| Dashboard | Streamlit, Matplotlib |
+
+---
 
 ## Project Structure
-* `main.py` - The backend engine. Cleans the data, runs the MCMC simulations, and exports the learned weights.
-* `dashboard.py` - The interactive frontend. Loads the saved model and evaluates new applicants in real-time.
-* `src/` - Helper modules for data fetching and cleaning.
-* `model/` - Storage for the compiled NetCDF (`.nc`) model and scaling `.pkl` files (ignored in git).
-* `data/` - Raw datasets and asset storage.
+
+```
+├── main.py          # trains the model, runs MCMC, exports weights
+├── dashboard.py     # Streamlit frontend, loads model, evaluates applicants
+├── src/             # helper modules for data fetching and cleaning
+├── model/           # compiled NetCDF model + scaler files (git ignored)
+├── data/            # raw datasets and assets
+└── images/          # concept breakdown slides
+```
+
+---
 
 ## How to Run
 
-1. **Install Dependencies:**
-   Ensure you have Python installed, then run:
-   ```bash
-   pip install pymc arviz streamlit scikit-learn pandas numpy matplotlib joblib kagglehub
-   ```
+**1. Install dependencies**
+```bash
+pip install pymc arviz streamlit scikit-learn pandas numpy matplotlib joblib kagglehub
+```
 
-2. **Train the Model:**
-Generate the model weights and data scalers (this will create the `model/` directory):
-    ```bash
-    python main.py
-    ```
-3. **Launch the Dashboard:**
-Start the interactive web interface:
-    ```bash
-    streamlit run dashboard.py
-    ```
+**2. Train the model**
+```bash
+python main.py
+```
+
+**3. Launch the dashboard**
+```bash
+streamlit run dashboard.py
+```
+
+---
+
+## Author
+
+**Lakshan Niroshan** — [GitHub](https://github.com/Niroshan-k) · [LinkedIn](https://www.linkedin.com/in/niroshank)
